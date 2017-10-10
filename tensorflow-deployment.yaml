@@ -1,0 +1,44 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    io.kompose.service: tensorflow
+  name: tensorflow
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        io.kompose.service: tensorflow
+    spec:
+      containers:
+        - name: jupyter
+          image: tensorflow/tensorflow
+          ports:
+            - containerPort: 8888
+          env:
+            - name: PASSWORD
+              value: "123456"
+          volumeMounts:
+            - mountPath: /tmp/tensorflow_logs
+              name: flowlog
+        - name: tensorboard
+          image: tensorflow/tensorflow
+          ports:
+            - containerPort: 6006
+          volumeMounts:
+            - mountPath: /tmp/tensorflow_logs
+              name: flowlog
+          args:
+            - tensorboard
+            - --logdir
+            - /tmp/tensorflow_logs
+            - --host
+            - 0.0.0.0
+      volumes:
+        - name: flowlog
+          emptyDir: {}
+  
+

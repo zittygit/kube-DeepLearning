@@ -1,0 +1,15 @@
+kind: Service
+apiVersion: v1
+metadata:
+  labels:
+    io.kompose.service: tensorflow
+  name: tensorflow
+spec:
+  type: NodePort
+  ports:
+  - name: jupyter
+    port: 8888
+  - name: tensorboard
+    port: 6006
+  selector:
+    io.kompose.service: tensorflow
